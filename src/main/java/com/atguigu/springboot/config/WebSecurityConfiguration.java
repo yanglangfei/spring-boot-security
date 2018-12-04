@@ -1,13 +1,15 @@
 package com.atguigu.springboot.config;
-
+import com.atguigu.springboot.MyFilterInvocationSecurity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.header.writers.frameoptions.AllowFromStrategy;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +21,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private MyAccessDecisionManager myAccessDecisionManager;
+
+    @Autowired
+    private MyFilterInvocationSecurity myFilterInvocationSecurity;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -45,6 +53,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         // 授权
         http.authorizeRequests().anyRequest().fullyAuthenticated()
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                        o.setSecurityMetadataSource(myFilterInvocationSecurity);
+                        o.setAccessDecisionManager(myAccessDecisionManager);
+                        return null;
+                    }
+                })
                 .and()
                 .formLogin()
                 .usernameParameter("name")
@@ -64,5 +80,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .withUser("yanglf").password("yanglf123").roles("ADMIN")
         .and()
         .withUser("liudehua").password("123456").roles("USER");
+
+        //加载注入的用户信息
+        auth.userDetailsService(new MyUserDetailsServiceImpl());
+
+
     }
 }

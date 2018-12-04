@@ -18,10 +18,15 @@ import org.springframework.context.annotation.Bean;
 @ServletComponentScan(basePackages = {"com.atguigu.springboot.servlet"})
 public class SpringBootLogApplication extends SpringBootServletInitializer {
 
+
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(SpringBootLogApplication.class, args);
-         context.getBean("person", Person.class).show();
+        context.getBean("person", Person.class).show();
     }
+
+
+
+
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
