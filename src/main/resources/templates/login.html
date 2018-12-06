@@ -16,7 +16,11 @@
         <input type="hidden" th:name="${_csrf.parameterName}"  th:value="${_csrf.token}">
     </div>
     <div>
-        <input type="submit" value="登录">
+        <input type="submit" value="" th:attr="value=#{login}">
+    </div>
+    <div>
+        <a th:href="@{/main(lan='zh_CN')}">中文</a>
+        <a th:href="@{/main(lan='en_US')}">英文</a>
     </div>
 </form>
 

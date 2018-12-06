@@ -24,4 +24,11 @@ public class SecurityController {
         return "login";
     }
 
+    @RequestMapping("/main")
+    public String main(){
+        return "main";
+    }
+
+
+
 }

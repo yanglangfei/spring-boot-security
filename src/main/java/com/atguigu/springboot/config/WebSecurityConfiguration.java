@@ -22,16 +22,18 @@ import javax.servlet.http.HttpServletRequest;
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
+   /* @Autowired
     private MyAccessDecisionManager myAccessDecisionManager;
 
     @Autowired
-    private MyFilterInvocationSecurity myFilterInvocationSecurity;
+    private MyFilterInvocationSecurity myFilterInvocationSecurity;*/
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().anyRequest().anonymous();
+
         //  CSRF    token 认证方式
-        http.csrf().csrfTokenRepository(new CookieCsrfTokenRepository())
+       /* http.csrf().csrfTokenRepository(new CookieCsrfTokenRepository())
         .requireCsrfProtectionMatcher(httpServletRequest ->
                 httpServletRequest.getMethod().equals("POST"));
 
@@ -53,14 +55,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         // 授权
         http.authorizeRequests().anyRequest().fullyAuthenticated()
-                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+               *//* .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     @Override
                     public <O extends FilterSecurityInterceptor> O postProcess(O o) {
                         o.setSecurityMetadataSource(myFilterInvocationSecurity);
                         o.setAccessDecisionManager(myAccessDecisionManager);
                         return null;
                     }
-                })
+                })*//*
                 .and()
                 .formLogin()
                 .usernameParameter("name")
@@ -70,19 +72,19 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/loginAction")  // 登录处理的URL
                 .permitAll()
                  .and()
-                  .logout().permitAll();
+                  .logout().permitAll();*/
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
+      /*  auth.inMemoryAuthentication()
                 .passwordEncoder(new MyPasswordEncoder())   // Spring Boot 2.0 之后必须要配置密码加解密方式
                 .withUser("yanglf").password("yanglf123").roles("ADMIN")
         .and()
-        .withUser("liudehua").password("123456").roles("USER");
+        .withUser("liudehua").password("123456").roles("USER");*/
 
         //加载注入的用户信息
-        auth.userDetailsService(new MyUserDetailsServiceImpl());
+       // auth.userDetailsService(new MyUserDetailsServiceImpl());
 
 
     }
